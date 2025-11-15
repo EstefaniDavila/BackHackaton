@@ -6,8 +6,7 @@ class CreatePosts < ActiveRecord::Migration[7.1]
       t.string :body
       t.string :source
 
-      t.references  :forum,          null: false, foreign_key: true, type: :uuid
-
+      t.references  :political_party,          null: false, foreign_key: true, type: :uuid    
       t.timestamps
     end
   end

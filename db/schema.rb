@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_15_111119) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_15_202006) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,12 +64,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_15_111119) do
     t.index ["user_id"], name: "index_blacklisted_tokens_on_user_id"
   end
 
-  create_table "forums", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
-    t.uuid "political_party_id", null: false
+  create_table "candidates", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "full_name"
+    t.string "document_number"
+    t.string "document_type"
+    t.integer "gender"
+    t.string "department"
+    t.string "province"
+    t.string "district"
+    t.string "position"
+    t.string "list_number"
+    t.string "photo_url"
+    t.string "cv_pdf"
+    t.uuid "political_party_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["political_party_id"], name: "index_forums_on_political_party_id"
   end
 
   create_table "members", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -83,9 +94,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_15_111119) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "role_member"
-    t.uuid "political_party_id"
+    t.string "department"
+    t.string "province"
+    t.string "district"
+    t.string "polling_place"
     t.index ["document_number"], name: "index_members_on_document_number", unique: true
-    t.index ["political_party_id"], name: "index_members_on_political_party_id"
   end
 
   create_table "political_parties", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -104,7 +117,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_15_111119) do
     t.integer "status"
     t.integer "members_count", default: 0
     t.date "founded_at"
-    t.uuid "member_id", null: false
+    t.uuid "member_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["acronym"], name: "index_political_parties_on_acronym", unique: true
@@ -122,12 +135,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_15_111119) do
 
   create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title"
-    t.string "before"
+    t.string "body"
     t.string "source"
-    t.uuid "forum_id", null: false
+    t.uuid "political_party_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["forum_id"], name: "index_posts_on_forum_id"
+    t.index ["political_party_id"], name: "index_posts_on_political_party_id"
   end
 
   create_table "refresh_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -171,12 +184,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_15_111119) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "blacklisted_tokens", "users"
-  add_foreign_key "forums", "political_parties"
-  add_foreign_key "members", "political_parties"
   add_foreign_key "political_parties", "members"
   add_foreign_key "politicalparty_members", "members"
   add_foreign_key "politicalparty_members", "political_parties"
-  add_foreign_key "posts", "forums"
+  add_foreign_key "posts", "political_parties"
   add_foreign_key "refresh_tokens", "users"
   add_foreign_key "user_tracks", "users"
 end

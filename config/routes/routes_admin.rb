@@ -29,6 +29,8 @@ Rails.application.routes.draw do
         post   '/posts',                  to: 'posts#create'
         put    '/posts/:id/update',       to: 'posts#update'
         delete '/posts/:id',              to: 'posts#destroy'
+        #################################3mmbeer#############################3
+        get '/select_member',             to: 'members#index_select'
       end
     end
   end

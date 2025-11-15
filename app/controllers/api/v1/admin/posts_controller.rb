@@ -11,11 +11,12 @@ class Api::V1::Admin::PostsController < ApplicationController
     render json: posts, status: :ok
   end
 
-  def index_by_forum
-    forum_id = params[:forum_id]
-    if forum_id.blank?
+  def index_by_party
+    party_id = params[:party_id]
+    if party_id.blank?
       return render json: { error: "Se requiere forum_id" }, status: :unprocessable_entity
     end
+    
     posts = Post.where(forum_id: forum_id).order(created_at: :desc)
     render json: posts, status: :ok
   end

@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  first_name: MyString
+  last_name: MyString
+  full_name: MyString
+  document_number: MyString
+  document_type: MyString
+  gender: 1
+  department: MyString
+  province: MyString
+  district: MyString
+  position: MyString
+  list_number: MyString
+  photo_url: MyString
+  cv_pdf: MyString
+  political_party_id: 
+
+two:
+  first_name: MyString
+  last_name: MyString
+  full_name: MyString
+  document_number: MyString
+  document_type: MyString
+  gender: 1
+  department: MyString
+  province: MyString
+  district: MyString
+  position: MyString
+  list_number: MyString
+  photo_url: MyString
+  cv_pdf: MyString
+  political_party_id: 

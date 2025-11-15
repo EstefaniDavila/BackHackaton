@@ -1,7 +1,6 @@
 class Post < ApplicationRecord
   has_one_attached :source
-  belongs_to :forum
-
+  has_one {}:political_party} :optional
 
   private
 

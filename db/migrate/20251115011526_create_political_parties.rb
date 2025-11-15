@@ -20,7 +20,7 @@ class CreatePoliticalParties < ActiveRecord::Migration[7.1]
 
       t.date :founded_at
 
-      t.references  :member,          null: false, foreign_key: true, type: :uuid
+      t.references  :member,          null: true, foreign_key: true, type: :uuid
 
       t.timestamps
     end
