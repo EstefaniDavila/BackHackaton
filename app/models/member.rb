@@ -1,9 +1,13 @@
 class Member < ApplicationRecord
- after_create :generate_user
+  after_create :generate_user
+  has_one :user, as: :roleable, dependent: :destroy
+  belongs_to :political_party, optional: true
 
- has_one :user, as: :roleable, dependent: :destroy
+ 
 
+  enum role_member: {citizen: 0,mesa_member: 1,party_representative: 2}
 
+  private
   def generate_user
     User.create!(
       email: self.email,
@@ -13,4 +17,5 @@ class Member < ApplicationRecord
       roleable: self
     )
   end
+
 end

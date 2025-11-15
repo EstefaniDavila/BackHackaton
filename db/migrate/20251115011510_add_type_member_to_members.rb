@@ -1,5 +1,5 @@
 class AddTypeMemberToMembers < ActiveRecord::Migration[7.1]
   def change
-    add_column :members, :type_member, :integer
+    add_column :members, :role_member, :integer
   end
 end
