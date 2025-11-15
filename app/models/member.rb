@@ -3,11 +3,19 @@ class Member < ApplicationRecord
   has_one :user, as: :roleable, dependent: :destroy
   belongs_to :political_party, optional: true
 
+<<<<<<< HEAD
   enum role_member: { citizen: 0, mesa_member: 1, party_representative: 2 }
   enum gender: { male: 0, female: 1 }
 
   private
 
+=======
+ enum role_member: {citizen: 0,mesa_member: 1,party_representative: 2}
+ enum gender: { male: 0, female: 1, other: 2 }
+
+  private
+  
+>>>>>>> origin/master
   def generate_user
     User.create!(
       email: email,

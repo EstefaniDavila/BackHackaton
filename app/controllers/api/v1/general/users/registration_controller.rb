@@ -8,9 +8,11 @@ module Users
         first_name: params[:first_name],
         last_name: params[:last_name],
         full_name: "#{params[:first_name]} #{params[:last_name]}",
+        email: params[:email],  
         document_number: params[:document_number],
-        document_type: params[:document_type] || 'DNI',
-        gender: params[:gender] || 0
+        document_type: params[:document_type] || "DNI",
+        role_member: 0,
+        gender: params[:gender] || 2
       )
 
       if member.save
