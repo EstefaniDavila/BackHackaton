@@ -1,12 +1,36 @@
 class Api::V1::Admin::PoliticalPartiesController < ApplicationController
   #   before_action :authenticate_resource
   #   before_action :authorize_user!
+  include SearchHelper
   skip_before_action :verify_authenticity_token
 
-  before_action :authenticate_and_set_user
+  # before_action :authenticate_and_set_user
 
   def index
-    render json: PoliticalParty.all.order(created_at: :desc)
+    keywords = params[:search_params] || ""
+    fields = params[:search_fields]&.split(",") || []
+    political_parties = PoliticalParty.all
+
+    if fields.present? && keywords.present?
+      search_conditions = combine_search_fields(fields, keywords, "text")
+      political_parties = political_parties.ransack(search_conditions).result
+    end
+    total_records = political_parties.count
+    if params[:sort].present?
+      field, order = params[:sort].split("%")
+      political_parties = political_parties.order(field => order)
+    else
+      political_parties = political_parties.order(Arel.sql("CASE WHEN status = 0 THEN 0 ELSE 1 END, created_at DESC"))
+    end
+    political_parties = political_parties.page(params[:page]).per(params[:per_page])
+
+    render json: {
+      political_parties: political_parties.as_json(),
+      current_page: political_parties.current_page,
+      total_pages: political_parties.total_pages,
+      per_pages: political_parties.limit_value,
+      total_political_parties: total_records,
+    }, status: :ok
   end
 
   def show
