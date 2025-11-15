@@ -1,13 +1,11 @@
 module Users
   class Api::V1::General::Users::PasswordsController < ApiGuard::PasswordsController
-     before_action :authenticate_resource, only: [:update]
+    before_action :authenticate_resource, only: [:update]
 
     def update
       user = current_resource
 
-      unless user&.authenticate(params[:old_password])
-        return render_error(422, message: 'Old password is incorrect.')
-      end
+      return render_error(422, message: 'Old password is incorrect.') unless user&.authenticate(params[:old_password])
 
       if user.update(password_params)
 
@@ -21,8 +19,7 @@ module Users
         new_refresh_token = response.headers['Refresh-Token']
         expire_at = response.headers['Expire-At']
 
-
-        render json: { 
+        render json: {
           message: I18n.t('api_guard.password.changed'),
           access_token: new_access_token,
           expires_at: expire_at,
@@ -32,7 +29,7 @@ module Users
         Rails.logger.error "Error al actualizar la contraseña para el usuario: #{user.inspect}"
         render_error(422, message: 'Password update failed.')
       end
-    rescue => e
+    rescue StandardError => e
       Rails.logger.error "Error en el controlador de passwords: #{e.message}"
       render_error(500, message: 'Token generation failed: ' + e.message)
     end

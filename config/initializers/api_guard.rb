@@ -4,7 +4,7 @@ ApiGuard.setup do |config|
   # Validity of the JWT access token
   # Default: 1 day
   # config.token_validity = 1.day
-    
+
   # Validity of the refresh token
   # Default: 2 weeks
   # config.refresh_token_validity = 2.weeks

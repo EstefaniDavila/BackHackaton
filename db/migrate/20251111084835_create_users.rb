@@ -1,9 +1,9 @@
 class CreateUsers < ActiveRecord::Migration[7.1]
   def change
     create_table :users, id: :uuid do |t|
-      t.string :email,           null: false, default: ""
-      t.string :document_number, null: false, default: ""
-      t.string :password_digest, null: false, default: ""
+      t.string :email,           null: false, default: ''
+      t.string :document_number, null: false, default: ''
+      t.string :password_digest, null: false, default: ''
       t.string :avatar
       t.string :phone
       t.integer :status

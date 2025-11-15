@@ -11,8 +11,8 @@
 #    document_number: "12312312",
 #    document_type: "DNI",
 #    gender: 1,
-#  ) 
- 
+#  )
+
 #  Member.create(
 #  first_name: "abigail",
 #  last_name: "dav",
@@ -22,9 +22,6 @@
 #  document_type: "DNI",
 #  gender: 1,
 # )
-
-
-
 
 #  id: "2589ebbf-efe8-4089-85f5-c1cc5a103e21",
 #  first_name: "abigail",
@@ -36,7 +33,6 @@
 #  gender: 1,
 #  created_at: Fri, 14 Nov 2025 10:21:52.543708000 UTC +00:00,
 #  updated_at: Fri, 14 Nov 2025 10:21:52.543708000 UTC +00:00>
-
 
 #  id: "a6973602-80d8-4fef-897d-5a7a28fd752f",
 #  first_name: "tefa",

@@ -1,5 +1,4 @@
 class Api::V1::General::Users2::UsersController < ApplicationController
-
   skip_before_action :verify_authenticity_token
 
   def profile
@@ -12,19 +11,18 @@ class Api::V1::General::Users2::UsersController < ApplicationController
     unauthorized_response
   end
 
-
   def update_avatar
     # debugger
     user = User.find_by(document_number: params[:document_number])
 
-    user.avatar = params[:avatar] unless params[:avatar] == "null"
+    user.avatar = params[:avatar] unless params[:avatar] == 'null'
     if user.save!
       render json: {
-        message: "¡Foto de perfil actualizado con éxito!"
+        message: '¡Foto de perfil actualizado con éxito!'
       }, status: :ok
     else
       render json: {
-        message: "No es un formato adminito, corrija e inténtelo de nuevo"
+        message: 'No es un formato adminito, corrija e inténtelo de nuevo'
       }, status: :unprocessable_entity
     end
   end
@@ -33,10 +31,9 @@ class Api::V1::General::Users2::UsersController < ApplicationController
 
   def find_profile(roleable_type, roleable_id)
     class_mappings = {
-      "Admin" => Admin,
-      "Member" => Member
+      'Admin' => Admin,
+      'Member' => Member
     }
     class_mappings[roleable_type].find(roleable_id)
   end
-
 end

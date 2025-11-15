@@ -13,14 +13,14 @@ module Users
       render json: {
         access_token: response.headers['Access-Token'],
         refresh_token: response.headers['Refresh-Token'],
-        expire_at: response.headers["Expire-At"],
+        expire_at: response.headers['Expire-At'],
         user: {
           **current_resource.attributes.symbolize_keys,
           full_name: full_name,
           role_type: current_resource.roleable_type,
           role_id: current_resource.roleable_id
         },
-        rol: current_resource.roleable_id,
+        rol: current_resource.roleable_id
       }, status: :ok
     end
 
@@ -28,10 +28,10 @@ module Users
 
     def find_refresh_token
       refresh_token_from_header = request.headers['Refresh-Token']
-    
+
       if refresh_token_from_header
         @refresh_token = find_refresh_token_of(current_resource, refresh_token_from_header)
-        return render_error(401, message: I18n.t('ussuario con token invalido')) unless @refresh_token
+        render_error(401, message: I18n.t('ussuario con token invalido')) unless @refresh_token
       else
         render_error(401, message: I18n.t('usuario no encontrado'))
       end

@@ -1,6 +1,6 @@
 class CreatePoliticalParties < ActiveRecord::Migration[7.1]
   def change
-    create_table :political_parties, id: :uuid  do |t|
+    create_table :political_parties, id: :uuid do |t|
       t.string :name
       t.string :logo
       t.string :website
@@ -22,6 +22,6 @@ class CreatePoliticalParties < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
-      add_index :political_parties, :acronym, unique: true
+    add_index :political_parties, :acronym, unique: true
   end
 end

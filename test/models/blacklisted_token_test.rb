@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class BlacklistedTokenTest < ActiveSupport::TestCase
   # test "the truth" do

@@ -10,17 +10,17 @@ module Users
         full_name = role.respond_to?(:full_name) ? role.full_name : "#{role.try(:first_name)} #{role.try(:last_name)}"
 
         render json: {
-          message: "Bienvenido a BugHunters",
+          message: 'Bienvenido a BugHunters',
           access_token: response.headers['Access-Token'],
           refresh_token: response.headers['Refresh-Token'],
-          expire_at: response.headers["Expire-At"],
+          expire_at: response.headers['Expire-At'],
           user: {
             **resource.attributes.symbolize_keys,
             full_name: full_name,
             role_type: resource.roleable_type,
             role_id: resource.roleable_id
           },
-          rol: resource.roleable_id,
+          rol: resource.roleable_id
         }, status: :ok
       else
         render_error(422, message: I18n.t('api_guard.authentication.invalid_login_credentials'))
@@ -43,52 +43,46 @@ module Users
         exp: Time.now.to_i + 1.month.to_i
       }
 
-      secret_key = 'tu_clave_secreta'
-
-      token = JWT.encode(payload, PRIVATE_KEY, 'RS256')
-      token
+      JWT.encode(payload, PRIVATE_KEY, 'RS256')
     end
 
     def verify_aud_token(token)
-      decoded_token = JWT.decode(token, PUBLIC_KEY, true, algorithm: 'RS256')
-      decoded_token
+      JWT.decode(token, PUBLIC_KEY, true, algorithm: 'RS256')
     rescue JWT::DecodeError
       nil
     end
 
- 
     def find_resource
       if params[:authentication].present? && params[:authentication][:document_number].present? && params[:authentication][:password].present?
         document_number = params[:authentication][:document_number].downcase.strip
         password = params[:authentication][:password]
-        
+
         puts "Document number: #{document_number}"
         puts "Password: #{password}"
-    
-        self.resource = User.find_by("document_number = ?", document_number)
-    
+
+        self.resource = User.find_by('document_number = ?', document_number)
+
         if resource
           puts "User found: #{resource.inspect}"
-          
+
           begin
             if resource.authenticate(password)
-              puts "Authentication successful"
+              puts 'Authentication successful'
               return
             else
-              puts "Authentication failed"
+              puts 'Authentication failed'
             end
           rescue BCrypt::Errors::InvalidHash => e
             puts "Invalid password hash: #{e.message}"
           end
         else
-          puts "User not found"
+          puts 'User not found'
         end
       else
-        puts "Missing parameters"
+        puts 'Missing parameters'
       end
-    
+
       render_error(422, message: I18n.t('api_guard.authentication.invalid_login_credentials'))
     end
-    
   end
 end

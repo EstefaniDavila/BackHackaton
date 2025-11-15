@@ -13,37 +13,35 @@ class User < ApplicationRecord
 
   enum status: { active: 0, inactive: 1 }
   def set_default_data
-    self.status ||= "active"
+    self.status ||= 'active'
   end
 
   def jwt_token_payload
-    { user: self.as_json }
+    { user: as_json }
   end
 
-  
   private
 
-  def self.find_for_database_authentication warden_condition
+  def self.find_for_database_authentication(warden_condition)
     conditions = warden_condition.dup
     login = conditions.delete(:login)
-    conditions = { :status=> "active"}
+    conditions = { status: 'active' }
     where(conditions).where(
-      ["lower(document_number) = :value ", { value: login.strip.downcase}]).first
+      ['lower(document_number) = :value ', { value: login.strip.downcase }]
+    ).first
   end
 
- 
   def authenticate_answer(answer)
-    self.answer_digest == Digest::SHA256.hexdigest(answer.upcase)
+    answer_digest == Digest::SHA256.hexdigest(answer.upcase)
   end
 
   def update_question_and_answer(new_question, new_answer)
-    self.update(question: new_question, answer_digest: Digest::SHA256.hexdigest(new_answer.upcase))
+    update(question: new_question, answer_digest: Digest::SHA256.hexdigest(new_answer.upcase))
   end
 
   def regenerate_password(password)
     self.password_digest = password
     self.password_confirmation = password
-    self.save!
+    save!
   end
-
 end
