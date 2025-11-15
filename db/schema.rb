@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_11_085724) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_15_011526) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,7 +46,29 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_11_085724) do
     t.integer "gender"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "type_member"
     t.index ["document_number"], name: "index_members_on_document_number", unique: true
+  end
+
+  create_table "political_parties", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "logo"
+    t.string "website"
+    t.string "plan_pdf"
+    t.string "acronym"
+    t.string "hq_address"
+    t.string "facebook_url"
+    t.string "twitter_url"
+    t.string "instagram_url"
+    t.string "youtube_url"
+    t.string "tiktok_url"
+    t.text "description"
+    t.integer "status"
+    t.integer "members_count", default: 0
+    t.date "founded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["acronym"], name: "index_political_parties_on_acronym", unique: true
   end
 
   create_table "refresh_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
