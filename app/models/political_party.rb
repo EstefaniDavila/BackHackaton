@@ -9,10 +9,18 @@ class PoliticalParty < ApplicationRecord
   has_many :members, through: :politicalparty_members
 
   before_destroy :purge_attachments_and_forum
+  after_commit :create_default_forum, on: :create
 
   # after_commit :update_members_count
 
   private
+
+  def create_default_forum
+    create_forum!(name: "#{name} Forum")
+  rescue => e
+    Rails.logger.error "No se pudo crear el foro: #{e.message}"
+    puts "No se pudo crear el foro: #{e.message}"  # útil para consola/IRB
+  end
 
   def logo_url
     Rails.application.routes.url_helpers.rails_blob_url(logo, only_path: true) if logo.attached?
@@ -38,8 +46,8 @@ class PoliticalParty < ApplicationRecord
   end
 
   def purge_attachments_and_forum
-  logo.purge_later if logo.attached?
-  plan_pdf.purge_later if plan_pdf.attached?
-  forum.destroy if forum.present?
-end
+    logo.purge_later if logo.attached?
+    plan_pdf.purge_later if plan_pdf.attached?
+    forum.destroy if forum.present?
+  end
 end

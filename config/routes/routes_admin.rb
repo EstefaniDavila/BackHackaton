@@ -21,6 +21,14 @@ Rails.application.routes.draw do
         patch  '/political_parties/:id/approve',      to: 'political_parties#approve'
         patch  '/political_parties/:id/reject',       to: 'political_parties#reject'
         patch '/political_parties/:id/assign_representative', to: 'political_parties#assign_representative'
+
+        ###################################### Post ######################################
+        get    '/posts',                  to: 'posts#index'
+        get    '/posts/:id',              to: 'posts#index_by_forum'
+        get    '/posts/:id/show',         to: 'posts#show'
+        post   '/posts',                  to: 'posts#create'
+        put    '/posts/:id/update',       to: 'posts#update'
+        delete '/posts/:id',              to: 'posts#destroy'
       end
     end
   end

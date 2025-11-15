@@ -63,7 +63,6 @@ class Api::V1::Admin::PoliticalPartiesController < ApplicationController
       if params[:political_party][:plan_pdf].present?
         party.plan_pdf.attach(params[:political_party][:plan_pdf])
       end
-      party.create_forum!(name: "#{party.name} Forum")
       render json: { message: "Partido Creado con exito" }, status: :ok
     else
       render json: { message: "Ocurrió un error al registrar el partido", errors: party.errors.full_messages }, status: :unprocessable_entity
