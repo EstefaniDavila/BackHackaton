@@ -20,6 +20,8 @@ class CreatePoliticalParties < ActiveRecord::Migration[7.1]
 
       t.date :founded_at
 
+      t.references  :member,          null: false, foreign_key: true, type: :uuid
+
       t.timestamps
     end
     add_index :political_parties, :acronym, unique: true
