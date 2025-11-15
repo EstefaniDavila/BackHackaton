@@ -3,6 +3,7 @@ class Member < ApplicationRecord
 
  has_one :user, as: :roleable, dependent: :destroy
 
+ enum gender: { male: 0, female: 1 }
 
   def generate_user
     User.create!(
