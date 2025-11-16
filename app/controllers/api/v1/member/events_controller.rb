@@ -12,19 +12,23 @@ class Api::V1::Member::EventsController < ApplicationController
 
   def by_political_party
     political_party = params[:political_party]
-    @events = Event.where(political_party: political_party)
+    @events = Event.where(political_party_id: political_party)
+    render json: @events
   end
 
   def by_general
     @events = Event.where(political_party_id: nil)
+    render json: @events
   end
 
   def normal
     @events = Event.where(type_member: 0)
+    render json: @events
   end
 
   def member
     @events = Event.where(type_member: 1)
+    render json: @events
   end
 
   private
