@@ -38,6 +38,8 @@ Rails.application.routes.draw do
         get '/events',                                      to: 'events#index'
         get '/events/:political_party',                     to: 'events#by_political_party'
         get '/events/general',                              to: 'events#by_general'
+        get '/events/normal',                               to: 'events#normal'
+        get '/events/member ',                              to: 'events#member'
       end
     end
   end

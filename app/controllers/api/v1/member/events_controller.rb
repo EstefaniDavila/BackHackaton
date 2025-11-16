@@ -19,6 +19,14 @@ class Api::V1::Member::EventsController < ApplicationController
     @events = Event.where(political_party_id: nil)
   end
 
+  def normal
+    @events = Event.where(type_member: 0)
+  end
+
+  def member
+    @events = Event.where(type_member: 1)
+  end
+
   private
 
   def event_params
