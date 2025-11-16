@@ -2,7 +2,7 @@ class Api::V1::Member::CandidatesController < ApplicationController
 
     def by_party_and_role
         party = params[:party]
-        role = params[:role] # 'presidential', 'vice1', 'vice2', 'deputy'
+        role = params[:role] 
         
         candidates = Candidate.where(political_party: party, role: role)
         render json: candidates
