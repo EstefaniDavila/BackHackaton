@@ -39,7 +39,6 @@ def index_by_party
 end
 
 
-
   def show
     post = Post.find(params[:id])
 
@@ -52,6 +51,7 @@ end
   end
 
   def create
+    debugger
     post = Post.new(post_params.except(:source))
 
     if post.save
