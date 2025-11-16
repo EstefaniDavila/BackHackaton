@@ -12,12 +12,7 @@ class Api::V1::Admin::PostsController < ApplicationController
   end
 
   def index_by_party
-    party_id = params[:party_id]
-    if party_id.blank?
-      return render json: { error: "Se requiere forum_id" }, status: :unprocessable_entity
-    end
-    
-    posts = Post.where(forum_id: forum_id).order(created_at: :desc)
+    posts = Post.where(political_party: nil).order(created_at: :desc)
     render json: posts, status: :ok
   end
 
@@ -34,6 +29,7 @@ class Api::V1::Admin::PostsController < ApplicationController
   end
 
   def create
+    debugger
     post = Post.new(post_params.except(:source))
 
     if post.save

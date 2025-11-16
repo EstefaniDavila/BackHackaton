@@ -1,6 +1,6 @@
 class Post < ApplicationRecord
   has_one_attached :source
-  has_one :political_party, optional: true
+  belongs_to :political_party, optional: true
 
   private
 

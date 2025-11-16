@@ -24,9 +24,9 @@ Rails.application.routes.draw do
 
         ###################################### Post ######################################
         get    '/posts',                  to: 'posts#index'
-        get    '/posts/:id',              to: 'posts#index_by_forum'
+        get    '/posts/:id',              to: 'posts#index_by_party'
         get    '/posts/:id/show',         to: 'posts#show'
-        post   '/posts',                  to: 'posts#create'
+        post   '/posts_new',                  to: 'posts#create'
         put    '/posts/:id/update',       to: 'posts#update'
         delete '/posts/:id',              to: 'posts#destroy'
         #################################3mmbeer#############################3
