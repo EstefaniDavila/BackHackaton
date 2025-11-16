@@ -23,8 +23,8 @@ Rails.application.routes.draw do
         patch '/political_parties/:id/assign_representative', to: 'political_parties#assign_representative'
 
         ###################################### Post ######################################
-        get    '/posts',                  to: 'posts#index'
-        get    '/posts/:id',              to: 'posts#index_by_party'
+        get    '/posts',                  to: 'posts#index_post_admin'
+        get    '/posts/political',        to: 'posts#index_by_party'
         get    '/posts/:id/show',         to: 'posts#show'
         post   '/posts_new',                  to: 'posts#create'
         put    '/posts/:id/update',       to: 'posts#update'
