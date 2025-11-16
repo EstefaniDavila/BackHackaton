@@ -15,18 +15,26 @@ class Api::V1::Admin::PostsController < ApplicationController
     if params[:sort].present?
       field, order = params[:sort].split('%')
       posts = posts.order(field => order)
-    else
-      posts = posts.order(Arel.sql('CASE WHEN status = 0 THEN 0 ELSE 1 END, created_at DESC'))
     end
     posts = posts.page(params[:page]).per(params[:per_page])
-
-    render json: {
-      posts: posts.as_json,
+   render json: {
+      posts: posts.map { |p|
+        {
+          id: p.id,
+          title: p.title,
+          body: p.body,
+          political_party_id: p.political_party_id,
+          source_url: p.source_url,
+          created_at: p.created_at,
+          updated_at: p.updated_at
+        }
+      },
       current_page: posts.current_page,
       total_pages: posts.total_pages,
-      per_pages: posts.limit_value,
+      per_page: posts.limit_value,
       total_posts: total_records
     }, status: :ok
+
   end
 
   def index_post_admin

@@ -24,6 +24,7 @@ Rails.application.routes.draw do
 
         ###################################### Post ######################################
         get    '/posts',                  to: 'posts#index_post_admin'
+        get    '/posts_for_admin',        to: 'posts#index_admin'
         get    '/posts/political',        to: 'posts#index_by_party'
         get    '/posts/:id/show',         to: 'posts#show'
         post   '/posts_new',                  to: 'posts#create'
