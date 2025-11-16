@@ -2,8 +2,35 @@ class Api::V1::Admin::PostsController < ApplicationController
   include SearchHelper
   skip_before_action :verify_authenticity_token
 
+  def index_admin
+    keywords = params[:search_params] || ''
+    fields = params[:search_fields]&.split(',') || []
+    posts = Post.all
+
+    if fields.present? && keywords.present?
+      search_conditions = combine_search_fields(fields, keywords, 'text')
+      posts = posts.ransack(search_conditions).result
+    end
+    total_records = posts.count
+    if params[:sort].present?
+      field, order = params[:sort].split('%')
+      posts = posts.order(field => order)
+    else
+      posts = posts.order(Arel.sql('CASE WHEN status = 0 THEN 0 ELSE 1 END, created_at DESC'))
+    end
+    posts = posts.page(params[:page]).per(params[:per_page])
+
+    render json: {
+      posts: posts.as_json,
+      current_page: posts.current_page,
+      total_pages: posts.total_pages,
+      per_pages: posts.limit_value,
+      total_posts: total_records
+    }, status: :ok
+  end
+
   def index_post_admin
-  posts = Post.where(political_party_id: nil).order(created_at: :desc)
+    posts = Post.where(political_party_id: nil).order(created_at: :desc)
 
     render json: posts.map { |p|
       {
@@ -18,36 +45,34 @@ class Api::V1::Admin::PostsController < ApplicationController
     }, status: :ok
   end
 
+  def index_by_party
+    posts = Post.where.not(political_party_id: nil)
+                .includes(:political_party)
+                .order(created_at: :desc)
 
-def index_by_party
-  posts = Post.where.not(political_party_id: nil)
-              .includes(:political_party)
-              .order(created_at: :desc)
-
-  render json: posts.map { |p|
-    {
-      id: p.id,
-      title: p.title,
-      body: p.body,
-      political_party_id: p.political_party_id,
-      political_party_name: p.political_party&.name,
-      source: p.source_url,
-      created_at: p.created_at,
-      updated_at: p.updated_at
-    }
-  }, status: :ok
-end
-
+    render json: posts.map { |p|
+      {
+        id: p.id,
+        title: p.title,
+        body: p.body,
+        political_party_id: p.political_party_id,
+        political_party_name: p.political_party&.name,
+        source: p.source_url,
+        created_at: p.created_at,
+        updated_at: p.updated_at
+      }
+    }, status: :ok
+  end
 
   def show
     post = Post.find(params[:id])
 
     render json: post.as_json(
-      only: [:id, :title, :body, :created_at, :updated_at],
+      only: %i[id title body created_at updated_at],
       methods: [:source_url]
     )
   rescue ActiveRecord::RecordNotFound
-    render json: { error: "Publicación no encontrada" }, status: :not_found
+    render json: { error: 'Publicación no encontrada' }, status: :not_found
   end
 
   def create
@@ -55,13 +80,11 @@ end
     post = Post.new(post_params.except(:source))
 
     if post.save
-      if post_params[:source].present?
-        post.source.attach(post_params[:source])
-      end
+      post.source.attach(post_params[:source]) if post_params[:source].present?
 
-      render json: { message: "Publicación creada con éxito" }, status: :ok
+      render json: { message: 'Publicación creada con éxito' }, status: :ok
     else
-      render json: { message: "Error al crear la publicación", errors: post.errors.full_messages },
+      render json: { message: 'Error al crear la publicación', errors: post.errors.full_messages },
              status: :unprocessable_entity
     end
   end
@@ -77,7 +100,7 @@ end
 
       render json: {
         message: 'Publicación actualizada con éxito',
-        post: post.as_json(only: [:id, :title, :body])
+        post: post.as_json(only: %i[id title body])
       }, status: :ok
     else
       render json: { errors: post.errors.full_messages }, status: :unprocessable_entity
