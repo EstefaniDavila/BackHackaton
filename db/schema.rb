@@ -80,13 +80,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_16_052743) do
   end
 
   create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "tittle"
+    t.string "title"
     t.datetime "date"
     t.text "description"
-    t.uuid "political_party_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["political_party_id"], name: "index_events_on_political_party_id"
   end
 
   create_table "members", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -191,7 +189,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_16_052743) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "blacklisted_tokens", "users"
-  add_foreign_key "events", "political_parties"
   add_foreign_key "political_parties", "members"
   add_foreign_key "politicalparty_members", "members"
   add_foreign_key "politicalparty_members", "political_parties"

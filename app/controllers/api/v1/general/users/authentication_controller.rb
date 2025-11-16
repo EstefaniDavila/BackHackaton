@@ -18,7 +18,8 @@ module Users
             **resource.attributes.symbolize_keys,
             full_name: full_name,
             role_type: resource.roleable_type,
-            role_id: resource.roleable_id
+            role_id: resource.roleable_id,
+            member_role: resource.roleable.is_a?(Member) ? resource.roleable.role_member : nil
           },
           rol: resource.roleable_id
         }, status: :ok
