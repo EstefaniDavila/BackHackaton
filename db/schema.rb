@@ -85,11 +85,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_16_115513) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-<<<<<<< HEAD
-=======
     t.integer "type_member"
-    t.index ["political_party_id"], name: "index_events_on_political_party_id"
->>>>>>> origin/master
   end
 
   create_table "members", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

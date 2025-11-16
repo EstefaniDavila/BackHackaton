@@ -43,6 +43,5 @@ class PoliticalParty < ApplicationRecord
   def purge_attachments_and_forum
     logo.purge_later if logo.attached?
     plan_pdf.purge_later if plan_pdf.attached?
-    forum.destroy if forum.present?
   end
 end

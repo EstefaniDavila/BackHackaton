@@ -39,10 +39,7 @@ class Api::V1::Admin::PoliticalPartiesController < ApplicationController
   def show
     render json: @political_party.as_json(
       only: [:id, :name, :acronym, :description, :status, :members_count, :founded_at, :member_id, :created_at, :updated_at],
-      methods: [:logo_url, :plan_pdf_url],
-      include: {
-        forum: { only: [:id, :name, :created_at, :updated_at] }
-      }
+      methods: [:logo_url, :plan_pdf_url]
     )
   end
 
@@ -99,8 +96,6 @@ class Api::V1::Admin::PoliticalPartiesController < ApplicationController
     party.logo.purge if party.logo.attached?
     party.plan_pdf.purge if party.plan_pdf.attached?
 
-    # Destruir el foro asociado
-    party.forum.destroy if party.forum.present?
     if party.destroy
       render json: { message: 'Political party deleted' }, status: :ok
     else
