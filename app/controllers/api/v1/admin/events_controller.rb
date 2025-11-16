@@ -52,8 +52,6 @@ class Api::V1::Admin::EventsController < ApplicationController
   def create
     
     event = Event.new(event_params)
-    debugger
-
     if event.save
       render json: { message: 'Evento Creado con exito' }, status: :ok
     else
@@ -88,7 +86,7 @@ class Api::V1::Admin::EventsController < ApplicationController
 
   def event_params
     params.require(:event).permit(
-      :title,
+      :tittle,
       :date,
       :description,
       :type_member

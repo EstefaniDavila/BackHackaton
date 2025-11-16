@@ -35,11 +35,11 @@ Rails.application.routes.draw do
         get '/candidates/circumscription_list_by_party/:party', to: 'candidates#circumscription_list_by_party'
 
         #  EVENTOS GENERALES
-        get '/events',                                      to: 'events#index'
-        get '/events/:political_party',                     to: 'events#by_political_party'
-        get '/events/general',                              to: 'events#by_general'
-        get '/events/normal',                               to: 'events#normal'
+        get '/events/general',                              to: 'events#index_for_mesa'
+        get '/events/normal',                               to: 'events#member_for_city'
         get '/events/member ',                              to: 'events#member'
+        # get '/events/:political_party',                     to: 'events#by_political_party'
+
       end
     end
   end

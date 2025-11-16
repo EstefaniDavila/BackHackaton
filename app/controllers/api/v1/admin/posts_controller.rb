@@ -84,16 +84,13 @@ class Api::V1::Admin::PostsController < ApplicationController
   end
 
   def create
-    debugger
     post = Post.new(post_params.except(:source))
-
     if post.save
       post.source.attach(post_params[:source]) if post_params[:source].present?
-
       render json: { message: 'Publicación creada con éxito' }, status: :ok
     else
       render json: { message: 'Error al crear la publicación', errors: post.errors.full_messages },
-             status: :unprocessable_entity
+          status: :unprocessable_entity
     end
   end
 
@@ -127,7 +124,7 @@ class Api::V1::Admin::PostsController < ApplicationController
   private
 
   def post_params
-    params.permit(
+    params.require(:post).permit(
       :title,
       :body,
       :political_party_id,

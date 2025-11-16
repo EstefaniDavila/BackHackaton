@@ -21,13 +21,13 @@ class Api::V1::Member::EventsController < ApplicationController
     render json: @events
   end
 
-  def normal
-    @events = Event.where(type_member: 0)
+  def index_for_mesa
+    @events = Event.all
     render json: @events
   end
 
-  def member
-    @events = Event.where(type_member: 1)
+  def member_for_city
+    @events = Event.where.not(type_member: :members)
     render json: @events
   end
 
