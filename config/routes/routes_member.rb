@@ -33,6 +33,11 @@ Rails.application.routes.draw do
 
         # 3️⃣ CIRCUNSCRIPCIONES POR PARTIDO
         get '/candidates/circumscription_list_by_party/:party', to: 'candidates#circumscription_list_by_party'
+
+        #  EVENTOS GENERALES
+        get '/events',                                      to: 'events#index'
+        get '/events/:political_party',                     to: 'events#by_political_party'
+        get '/events/general',                              to: 'events#by_general'
       end
     end
   end
