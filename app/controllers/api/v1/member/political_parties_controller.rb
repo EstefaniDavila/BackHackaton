@@ -23,7 +23,7 @@ class Api::V1::Member::PoliticalPartiesController < ApplicationController
     end
     render json: result, status: :ok
   end
-
+ 
   def show
     render json: @political_party
   end
