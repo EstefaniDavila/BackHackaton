@@ -1,44 +1,68 @@
 class Api::V1::Admin::PostsController < ApplicationController
-  #   before_action :authenticate_resource
-  #   before_action :authorize_user!
   include SearchHelper
   skip_before_action :verify_authenticity_token
 
-  # before_action :authenticate_and_set_user
+  def index_post_admin
+  posts = Post.where(political_party_id: nil).order(created_at: :desc)
 
-  def index
-    posts = Post.all.order(created_at: :desc)
-    render json: posts, status: :ok
+    render json: posts.map { |p|
+      {
+        id: p.id,
+        title: p.title,
+        body: p.body,
+        political_party_id: p.political_party_id,
+        source: p.source_url,
+        created_at: p.created_at,
+        updated_at: p.updated_at
+      }
+    }, status: :ok
   end
 
-  def index_by_party
-    posts = Post.where(political_party: nil).order(created_at: :desc)
-    render json: posts, status: :ok
-  end
+
+def index_by_party
+  posts = Post.where.not(political_party_id: nil)
+              .includes(:political_party)
+              .order(created_at: :desc)
+
+  render json: posts.map { |p|
+    {
+      id: p.id,
+      title: p.title,
+      body: p.body,
+      political_party_id: p.political_party_id,
+      political_party_name: p.political_party&.name,
+      source: p.source_url,
+      created_at: p.created_at,
+      updated_at: p.updated_at
+    }
+  }, status: :ok
+end
+
+
 
   def show
     post = Post.find(params[:id])
+
     render json: post.as_json(
-      only: [:id, :title, :body, :source, :created_at, :updated_at],
-      include: {
-        forum: { only: [:id, :name] }
-      }
+      only: [:id, :title, :body, :created_at, :updated_at],
+      methods: [:source_url]
     )
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Publicación no encontrada" }, status: :not_found
   end
 
   def create
-    debugger
     post = Post.new(post_params.except(:source))
 
     if post.save
-      if params[:post][:source].present?
-        post.source.attach(params[:post][:source])
+      if post_params[:source].present?
+        post.source.attach(post_params[:source])
       end
-      render json: { message: "Publicacion creada con exito" }, status: :ok
+
+      render json: { message: "Publicación creada con éxito" }, status: :ok
     else
-      render json: { message: "Ocurrió un error al crear la publicacion", errors: post.errors.full_messages }, status: :unprocessable_entity
+      render json: { message: "Error al crear la publicación", errors: post.errors.full_messages },
+             status: :unprocessable_entity
     end
   end
 
@@ -46,16 +70,14 @@ class Api::V1::Admin::PostsController < ApplicationController
     post = Post.find(params[:id])
 
     if post.update(post_params.except(:source))
-      if params[:post][:source].present?
+      if post_params[:source].present?
         post.source.purge_later if post.source.attached?
-        post.source.attach(params[:post][:source])
+        post.source.attach(post_params[:source])
       end
 
       render json: {
-        message: 'Post updated successfully',
-        party: post.as_json(
-          only: [:id, :title, :body]
-        )
+        message: 'Publicación actualizada con éxito',
+        post: post.as_json(only: [:id, :title, :body])
       }, status: :ok
     else
       render json: { errors: post.errors.full_messages }, status: :unprocessable_entity
@@ -63,26 +85,22 @@ class Api::V1::Admin::PostsController < ApplicationController
   end
 
   def destroy
-    post =Post.find(params[:id])
-    post.source.purge if post.source.attached?
+    post = Post.find(params[:id])
 
-    if post.destroy
-      render json: { message: 'Post deleted' }, status: :ok
-    else
-      render json: { message: 'Error on Post deleted' }, status: :ok
-    end
+    post.source.purge if post.source.attached?
+    post.destroy
+
+    render json: { message: 'Publicación eliminada' }, status: :ok
   end
 
+  private
+
   def post_params
-    # params.require(:political_party).permit(
-    #   :title,
-    #   :body,
-    #   :forum_id
-    # )
     params.permit(
       :title,
       :body,
-      :forum_id
+      :political_party_id,
+      :source
     )
   end
 end
