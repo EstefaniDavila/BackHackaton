@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_15_202006) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_16_010026) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,23 +64,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_15_202006) do
     t.index ["user_id"], name: "index_blacklisted_tokens_on_user_id"
   end
 
-  create_table "candidates", force: :cascade do |t|
-    t.string "first_name"
-    t.string "last_name"
-    t.string "full_name"
+  create_table "candidates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "full_name", null: false
     t.string "document_number"
-    t.string "document_type"
-    t.integer "gender"
-    t.string "department"
-    t.string "province"
-    t.string "district"
-    t.string "position"
-    t.string "list_number"
     t.string "photo_url"
-    t.string "cv_pdf"
-    t.uuid "political_party_id"
+    t.integer "position_type", null: false
+    t.integer "role", null: false
+    t.string "circumscription"
+    t.integer "order_number"
+    t.uuid "political_party_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["political_party_id"], name: "index_candidates_on_political_party_id"
+    t.index ["position_type"], name: "index_candidates_on_position_type"
   end
 
   create_table "members", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -120,6 +116,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_15_202006) do
     t.uuid "member_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "affiliates_rop"
     t.index ["acronym"], name: "index_political_parties_on_acronym", unique: true
     t.index ["member_id"], name: "index_political_parties_on_member_id"
   end

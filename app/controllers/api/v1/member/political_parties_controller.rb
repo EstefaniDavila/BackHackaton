@@ -15,6 +15,7 @@ class Api::V1::Member::PoliticalPartiesController < ApplicationController
         name: party.name,
         acronym: party.acronym,
         logo: party.logo,
+        #presidente
         # Todos los representantes del partido
         representative: party.member ? { id: party.member.id, full_name: party.member.full_name } : nil
       }
