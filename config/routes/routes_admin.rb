@@ -29,8 +29,16 @@ Rails.application.routes.draw do
         post   '/posts_new',                  to: 'posts#create'
         put    '/posts/:id/update',       to: 'posts#update'
         delete '/posts/:id',              to: 'posts#destroy'
-        #################################3mmbeer#############################3
+        # ################################3mmbeer#############################3
         get '/select_member',             to: 'members#index_select'
+
+        ###################################### Event ######################################
+        get    '/events',                                  to: 'events#index'
+        get    '/events/party/:political_party',           to: 'event#by_political_party'
+        get    '/events/general',                          to: 'events#by_general'
+        post   '/events_new',                              to: 'events#create'
+        put    '/events/:id/update',                       to: 'events#update'
+        delete '/events/:id',                              to: 'events#destroy'
       end
     end
   end
