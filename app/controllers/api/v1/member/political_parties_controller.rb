@@ -10,17 +10,17 @@ class Api::V1::Member::PoliticalPartiesController < ApplicationController
     parties = PoliticalParty.all.order(created_at: :desc)
 
     result = parties.map do |party|
+      president = party.candidates.find_by(position_type: :presidential)
       {
         id: party.id,
         name: party.name,
         acronym: party.acronym,
-        logo: party.logo,
-        #presidente
-        # Todos los representantes del partido
+        logo: party.logo.attached? ? url_for(party.logo) : nil,
+        president_id: president ? president.id : nil,
+        president_name: president ? president.full_name : nil,
         representative: party.member ? { id: party.member.id, full_name: party.member.full_name } : nil
       }
     end
-
     render json: result, status: :ok
   end
 
